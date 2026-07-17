@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { generateStructuredJSON } from '../lib/anthropic.js';
+import { generateStructuredJSON } from '../lib/textGen.js';
 
 const router = Router();
 

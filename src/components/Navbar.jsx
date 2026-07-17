@@ -1,39 +1,46 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-const links = [
-  { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-  { to: '/students', label: 'Students', icon: '🎓' },
-  { to: '/teachers', label: 'Teachers', icon: '👩‍🏫' },
-  { to: '/classes', label: 'Classes', icon: '🏫' },
-  { to: '/grades', label: 'Grades', icon: '📝' },
-  { to: '/attendance', label: 'Attendance', icon: '✅' },
-  { to: '/fees', label: 'Fees', icon: '💰' },
-];
-
-export default function Navbar() {
+const Navbar = () => {
   const location = useLocation();
+
+  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
+
+  const navLink = (path, label) => (
+    <Link
+      to={path}
+      className={`px-4 py-2 rounded transition ${
+        isActive(path)
+          ? 'bg-studio-primary text-white font-semibold'
+          : 'text-slate-300 hover:text-white hover:bg-slate-800'
+      }`}
+    >
+      {label}
+    </Link>
+  );
+
   return (
-    <nav className="bg-school-sidebar border-b border-school-border px-6 py-3 flex items-center justify-between">
-      <Link to="/dashboard" className="flex items-center gap-2">
-        <span className="text-2xl">🎓</span>
-        <span className="text-xl font-bold text-white">EduHub</span>
-      </Link>
-      <div className="hidden md:flex items-center gap-1">
-        {links.map((l) => (
-          <Link
-            key={l.to}
-            to={l.to}
-            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              location.pathname === l.to
-                ? 'bg-school-primary text-white'
-                : 'text-slate-300 hover:text-white hover:bg-white/10'
-            }`}
+    <nav className="bg-studio-card border-b border-studio-border sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <Link to="/" className="text-2xl font-bold text-studio-primary hover:text-indigo-400 transition">
+          🎬 StudioAI
+        </Link>
+
+        <div className="flex gap-6">
+          {navLink('/', 'Home')}
+          {navLink('/studio', 'Studio')}
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 text-slate-300 hover:text-white transition"
           >
-            {l.label}
-          </Link>
-        ))}
+            GitHub
+          </a>
+        </div>
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { generateText } from '../lib/anthropic.js';
+import { generateText } from '../lib/textGen.js';
 
 const router = Router();
 

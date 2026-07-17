@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduHub – School Management System</title>
+    <title>StudioAI – Narrative Game Studio</title>
+    <!-- Tailwind via CDN for this scaffold -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -14,17 +15,13 @@
               inter: ['Inter', 'system-ui', 'sans-serif'],
             },
             colors: {
-              school: {
-                bg: '#0f172a',
-                sidebar: '#1e293b',
-                card: '#1e293b',
-                border: '#334155',
-                primary: '#3b82f6',
-                primaryLight: '#60a5fa',
-                success: '#10b981',
+              studio: {
+                bg: '#0a0a0f',
+                card: '#111118',
+                border: '#1e293b',
+                primary: '#6366f1',
+success: '#10b981',
                 warning: '#f59e0b',
-                danger: '#ef4444',
-                info: '#06b6d4',
               },
             },
           },
@@ -34,15 +31,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- model-viewer: renders the GLB files Meshy generates for 3D character models -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
       html, body, #root { height: 100%; }
       body { margin: 0; font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-      ::-webkit-scrollbar { width: 6px; }
-      ::-webkit-scrollbar-track { background: #1e293b; }
-      ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
     </style>
   </head>
-  <body class="bg-school-bg text-slate-100">
+  <body class="bg-studio-bg text-slate-100">
     <div id="root" class="h-full"></div>
     <script type="module" src="./src/main.jsx"></script>
   </body>

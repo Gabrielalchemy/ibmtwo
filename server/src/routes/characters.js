@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { generateStructuredJSON } from '../lib/anthropic.js';
-import { generateImage } from '../lib/openaiImage.js';
+import { generateStructuredJSON } from '../lib/textGen.js';
+import { generateImage } from '../lib/imageGen.js';
+import { generate3DFromImage } from '../lib/tripoSR.js';
 
 const router = Router();
 
@@ -47,6 +48,25 @@ router.post('/portrait', async (req, res) => {
     res.json({ b64_png });
   } catch (err) {
     console.error('[characters/portrait]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /characters/model3d - generates a 3D model from an existing portrait via TripoSR.
+// This call blocks until the model is ready (the free Space's shared queue means
+// it can take anywhere from ~30s to a few minutes).
+router.post('/model3d', async (req, res) => {
+  const { portrait_b64 } = req.body;
+
+  if (!portrait_b64 || typeof portrait_b64 !== 'string') {
+    return res.status(400).json({ error: 'portrait_b64 (string) is required - generate a portrait first' });
+  }
+
+  try {
+    const model_url = await generate3DFromImage(portrait_b64);
+    res.json({ model_url });
+  } catch (err) {
+    console.error('[characters/model3d]', err.message);
     res.status(500).json({ error: err.message });
   }
 });

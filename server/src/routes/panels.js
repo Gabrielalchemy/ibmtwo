@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { generateStructuredJSON } from '../lib/anthropic.js';
-import { generateImage } from '../lib/openaiImage.js';
+import { generateStructuredJSON } from '../lib/textGen.js';
+import { generateImage } from '../lib/imageGen.js';
 
 const router = Router();
 

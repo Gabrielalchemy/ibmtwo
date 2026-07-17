@@ -22,8 +22,10 @@ app.use(express.json({ limit: '5mb' }));
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    anthropic_key_configured: Boolean(process.env.ANTHROPIC_API_KEY),
-    openai_key_configured: Boolean(process.env.OPENAI_API_KEY),
+    groq_configured: Boolean(process.env.GROQ_API_KEY),
+    image_provider: 'pollinations (no key required)',
+    model3d_provider: 'TripoSR (Hugging Face Space)',
+    hf_token_configured: Boolean(process.env.HF_TOKEN),
   });
 });
 
@@ -43,10 +45,12 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Studio AI backend listening on http://localhost:${PORT}`);
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.warn('⚠️  ANTHROPIC_API_KEY not set - text generation routes will fail until you add it to server/.env');
+  if (!process.env.GROQ_API_KEY) {
+    console.warn('⚠️  GROQ_API_KEY not set - text generation routes will fail until you add it to server/.env');
   }
-  if (!process.env.OPENAI_API_KEY) {
-    console.warn('⚠️  OPENAI_API_KEY not set - image generation routes will fail until you add it to server/.env');
+  if (!process.env.HF_TOKEN) {
+    console.log('ℹ️  HF_TOKEN not set - 3D model generation will use the shared/anonymous Hugging Face queue (slower, stricter limits)');
+  } else {
+    console.log('✓ HF_TOKEN loaded - 3D model generation will use your personal Hugging Face quota');
   }
 });

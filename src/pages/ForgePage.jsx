@@ -1,41 +1,44 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { generateForgeGDD } from '../api.js';
 import { useStudio } from '../context/StudioContext.jsx';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
 // SECTION: ForgeAI page
 const ForgePage = () => {
   const {
-    project_id,
     setProjectId,
     project_name,
     setProjectName,
     completed_modules,
-    setCompletedModules,
+    markModuleComplete,
     world_bible_summary,
     setWorldBibleSummary,
+    setPillars,
+    setGdd,
   } = useStudio();
   const [concept, setConcept] = React.useState('A cozy sci-fi trading sim on a ringworld station.');
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(null);
   const hasRunForge = completed_modules.includes('forge');
-  const handleRunForge = () => {
+
+  const handleRunForge = async () => {
+    if (!concept.trim()) return;
     setLoading(true);
-    // Fake async generation
-    setTimeout(() => {
-      if (!project_id) {
-        setProjectId(`proj_${Math.random().toString(36).slice(2, 8)}`);
-      }
-      if (!project_name || project_name === 'Untitled Project') {
-        setProjectName('Ringworld Traders');
-      }
-      if (!hasRunForge) {
-        setCompletedModules([...completed_modules, 'forge']);
-      }
-      setWorldBibleSummary(
-        'In the shadow of a decaying megastructure, independent captains barter stories, contraband, and fragile peace between rival guilds. The station AI has begun to dream, and its whispers leak into black-market augmentations.'
-      );
+    setError(null);
+    try {
+      const { data } = await generateForgeGDD({ concept });
+      setProjectId((prev) => prev || `proj_${Math.random().toString(36).slice(2, 8)}`);
+      setProjectName(data.project_name || 'Untitled Project');
+      setWorldBibleSummary(data.world_bible_summary || '');
+      setPillars(Array.isArray(data.pillars) ? data.pillars : []);
+      setGdd(data.gdd || null);
+      markModuleComplete('forge');
+    } catch (err) {
+      setError(err.response?.data?.error || err.message || 'Something went wrong generating your world bible.');
+    } finally {
       setLoading(false);
-    }, 900);
+    }
   };
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <header>
@@ -59,11 +62,12 @@ const ForgePage = () => {
         <button
           type="button"
           onClick={handleRunForge}
-          disabled={loading}
+          disabled={loading || !concept.trim()}
           className="inline-flex items-center gap-2 rounded-full bg-studio-primary px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-wait"
         >
           {loading ? 'Generating Bible & GDD...' : hasRunForge ? 'Regenerate World Bible' : 'Run ForgeAI'}
         </button>
+        {error && <p className="text-xs text-red-400">{error}</p>}
       </section>
       <section className="border border-studio-border rounded-xl bg-studio-card/60 p-4 space-y-3">
         <div className="flex items-center justify-between">
@@ -74,6 +78,9 @@ const ForgePage = () => {
           <LoadingSpinner label="Weaving your universe" />
         ) : (
           <p className="text-sm text-slate-300 leading-relaxed">{world_bible_summary}</p>
+        )}
+        {hasRunForge && project_name && !loading && (
+          <p className="text-xs text-slate-500">Project name: <span className="text-slate-300">{project_name}</span></p>
         )}
       </section>
     </div>

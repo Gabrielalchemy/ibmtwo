@@ -1,38 +1,33 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { SchoolProvider } from './context/SchoolContext.jsx';
+import { Routes, Route } from 'react-router-dom';
+import { StudioProvider } from './context/StudioContext.jsx';
 import Navbar from './components/Navbar.jsx';
 import Layout from './layout/Layout.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import Students from './pages/StudentsPage.jsx';
-import Teachers from './pages/TeachersPage.jsx';
-import Classes from './pages/ClassesPage.jsx';
-import Grades from './pages/GradesPage.jsx';
-import Attendance from './pages/AttendancePage.jsx';
-import Fees from './pages/FeesPage.jsx';
-
+import Landing from './pages/Landing.jsx';
+import StudioDashboard from './pages/StudioDashboard.jsx';
+import ForgePage from './pages/ForgePage.jsx';
+import CharactersPage from './pages/CharactersPage.jsx';
+import StoryPage from './pages/StoryPage.jsx';
+import PanelsPage from './pages/PanelsPage.jsx';
+import PlaytestPage from './pages/PlaytestPage.jsx';
+import CompanionPage from './pages/CompanionPage.jsx';
 const App = () => {
   return (
-    <SchoolProvider>
-      <div className="h-full flex flex-col">
-        <Navbar />
-        <div className="flex-1 overflow-hidden">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route element={<Layout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/students" element={<Students />} />
-              <Route path="/teachers" element={<Teachers />} />
-              <Route path="/classes" element={<Classes />} />
-              <Route path="/grades" element={<Grades />} />
-              <Route path="/attendance" element={<Attendance />} />
-              <Route path="/fees" element={<Fees />} />
-            </Route>
-          </Routes>
-        </div>
-      </div>
-    </SchoolProvider>
+    <StudioProvider>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/studio" element={<Layout />}>
+          <Route index element={<StudioDashboard />} />
+          <Route path="forge" element={<ForgePage />} />
+          <Route path="characters" element={<CharactersPage />} />
+          <Route path="story" element={<StoryPage />} />
+          <Route path="panels" element={<PanelsPage />} />
+          <Route path="playtest" element={<PlaytestPage />} />
+          <Route path="companion" element={<CompanionPage />} />
+        </Route>
+      </Routes>
+    </StudioProvider>
   );
 };
-
 export default App;
